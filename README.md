@@ -85,27 +85,12 @@ The infrastructure is composed of:
 ## Required comparisons
 
 ### Virtual Machines vs Docker
+Virtual Machines (VMs) and Docker containers differ primarily in architecture: VMs virtualize hardware, running a full guest OS, whereas Docker containers virtualize the operating system, sharing the host kernel. Docker is faster, lightweight, and ideal for microservices and CI/CD, while VMs offer superior, total isolation for complex, diverse OS applications. 
 
-What is a virtual machine ?  
-A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run programs and deploy apps. One or more virtual “guest” machines run on a physical “host” machine. Each virtual machine runs its own operating system and functions separately from the other VMs, even when they are all running on the same host. This means that, for example, a virtual MacOS virtual machine can run on a physical PC.
-
-
----
-
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Container
-
-What is a Container?  
-A Container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
-
-What is The Difference Between Container and VM?  
-Containers and Virtual machines have similar resource isolation and allocation benefits but function differently because containers virtualize the operating system instead of the hardware. Containers are more portable and efficient.
-
-Containers are an abstraction at the app layer that packages code and dependencies together. Multiple containers can run on the same machine and share the OS kernel with other containers, each running as isolated processes in user space. Containers take up less space than VMs (talks about tens of MBs in size), can handle more applications, and require fewer VMs and Operating Systems.
+![vvvvm](https://github.com/user-attachments/assets/79d62829-17ca-47e0-acd8-fe41d44e9a5f)
 
 ### Secrets vs Environment Variables
-Environment variables are useful for configuration, but sensitive data (passwords, API keys) should not be committed in Git.  
-Docker secrets are recommended for confidential information because they are handled separately and can reduce the risk of leaking credentials.
+Secrets and environment variables differ primarily in security and purpose: environment variables are generally used for non-sensitive configuration (e.g., app mode, feature flags), while secrets are encrypted, restricted, and managed to store sensitive credentials like API keys or passwords. Secrets provide better security by preventing exposure in logs, codebases, or process inspections.
 
 ### Docker Network vs Host Network
 Using a Docker network provides container isolation and controlled communication.  
@@ -116,14 +101,24 @@ When you use a bind mount, a file or directory on the host machine is mounted fr
 
 Volumes are persistent data stores for containers, created and managed by Docker. You can create a volume explicitly using the docker volume create command, or Docker can create a volume during container or service creation. When you create a volume, it's stored within a directory on the Docker host.
 
+- With Bind Mount, a file or directory on the host machine is mounted into a container. The file or directory is referenced by its full or relative path on the host machine.
+- With Volume, a new directory is created within Docker's storage directory on the host machine, and Docker manages that directory's content.
 
-### Difference between vm and docker 
 
-A VM lets you run a virtual machine on any hardware. Docker lets you run an application on any operating system. 
-It uses isolated user-space instances known as containers. 
-Docker containers have their own file system, dependency structure, processes, and network capabilities.
+---
 
-![vvvvm](https://github.com/user-attachments/assets/79d62829-17ca-47e0-acd8-fe41d44e9a5f)
+
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Container/VM
+
+What is a Container?  
+A Container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
+
+What is a virtual machine ?  
+A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run programs and deploy apps. One or more virtual “guest” machines run on a physical “host” machine. Each virtual machine runs its own operating system and functions separately from the other VMs, even when they are all running on the same host. This means that, for example, a virtual MacOS virtual machine can run on a physical PC.
+
+What is The Difference Between Container and VM?  
+Containers and Virtual machines have similar resource isolation and allocation benefits but function differently because containers virtualize the operating system instead of the hardware. Containers are more portable and efficient.
+
 
 ---
 
@@ -147,11 +142,22 @@ Docker Image is built from a DOCKERFILE, which is a simple text file that contai
 Dockerfile is that SIMPLE TEXT FILE, which contains a set of instructions for building a Docker Image. It specifies the base image to use and then includes a series of commands that automate the process for configuring and building the image, such as installing packages, copying files, and setting environment variables. Each command in the Dockerfile creates a new layer in the image.
 
 ```
-  FROM  - defines a base for your image. exemple : FROM debian  
-  RUN - executes any commands in a new layer on top of the current image and commits the result. RUN also has a shell form for running commands.  
-  WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow it in the Dockerfile. (You go directly in the directory you choose)  
-  COPY - copies new files or directories from and adds them to the filesystem of the container at the path .  
-  CMD - lets you define the default program that is run once you start the container based on this image. Each Dockerfile only has one CMD, and only the last CMD instance is respected       when multiple ones exist.
+  FROM - defines a base for your image. exemple : FROM debian  
+
+  RUN  - executes any commands in a new layer on top of the current image 
+          and commits the result. 
+
+          RUN also has a shell form for running commands.  
+  WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT,
+            COPY, and ADD instructions that follow it in the Dockerfile. 
+            (You go directly in the directory you choose)  
+
+  COPY -  copies new files or directories from and adds them to 
+           the filesystem of the container at the path .  
+
+  CMD - lets you define the default program that is run once you start 
+        the container based on this image. Each Dockerfile only has one CMD,
+         and only the last CMD instance is respected when multiple ones exist.
 ```
 
 ### What is Entrypoint ?
@@ -168,10 +174,14 @@ Overall, Docker Compose streamlines the development process, making it easier fo
 
 A Docker Compose has 3 important parts, which are:
 
-  - Services: A service is a unit of work in Docker Compose, it has a name, and it defines a container images, a set of environment variables,
+  - Services: 
+    A service is a unit of work in Docker Compose, it has a name, and it  
+    defines a container images, a set of environment variables,
     and a set of ports that are exposed to the host machine. When you run docker-compose up, Docker will create a new container for each service in your Compose file.  
-  - Networks: A network is a way for containers to communicate with each other. When you create a network in your Compose file, Docker will create a new network that all the other       containers in your Compose file will be connected to. This allows containers to communicate with each other without even knowing the IP of each other, just by the name.  
-  - Volumes: A volume is a way to store data that is shared between containers. When you create a volume in your Compose file, Docker will create a new volume (a folder in another        way) that all the containers have access to. This allows you to share data between the containers without having to copy-paste each and every time you want that data.
+  - Networks:
+     A network is a way for containers to communicate with each other. When you create a network in your Compose file, Docker will create a new network that all the other       containers in your Compose file will be connected to. This allows containers to communicate with each other without even knowing the IP of each other, just by the name.  
+  - Volumes: 
+    A volume is a way to store data that is shared between containers. When you create a volume in your Compose file, Docker will create a new volume (a folder in another        way) that all the containers have access to. This allows you to share data between the containers without having to copy-paste each and every time you want that data.
 
 Example snippet:
 ```yaml
@@ -234,6 +244,7 @@ The daemon process is NOT the PID 1, the daemon process is a background process 
 
 ---
 
+
 ## WordPress tooling
 
 ### What is WP-CLI?
@@ -242,14 +253,18 @@ WP-CLI is the command line interface for WordPress. It is a tool that allows you
 ### what is .wordprezss php-fpm ?
 PHP-FPM is a processor for PHP, one of the most common scripting languages, that enables WordPress sites to handle a greater volume of web traffic without relying on as many server resources as when using alternative PHP processors.
 
+
 ---
+
 
 ### What is FTP? And How Does it Work?
 FTP or File Transfer Protocol is a protocol that’s used for transferring files between a client and a server over TCP/IP network, such as the internet. It provides a robust mechanism for users to upload, download, and manage files on remote servers.
 
 FTP works by opening two connections that link the 2 hosts (client and server) trying to communicate between each other, one connection is designed for the commands and replies that gets sent between the two clients, and the other connection is handles the transfer of the data.
 
+
 ---
+
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> NGINX
 
