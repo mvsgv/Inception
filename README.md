@@ -48,7 +48,7 @@ This repository focuses on Docker, Docker Compose, containers, networking, volum
 
 ---
 
-## Instructions
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Instructions
 
 ### Prerequisites
 - Docker + Docker Compose installed
@@ -91,7 +91,7 @@ A Virtual Machine (VM) is a compute resource that uses software instead of a p
 ---
 
 
-**CONTAINER**
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Container
 
 What is a Container?  
 A Container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
@@ -126,7 +126,7 @@ Docker containers have their own file system, dependency structure, processes, a
 ---
 
 
-## DOCKER
+## ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Docker
 
 ### What is a docker?
 Docker is an operating system for containers. Similar to how a virtual machine virtualizes (removes the need to directly manage) server hardware, containers virtualize the operating system of a server. Docker is installed on each server and provides simple commands you can use to build, start, or stop containers.  
@@ -249,7 +249,7 @@ FTP works by opening two connections that link the 2 hosts (client and server) t
 
 ---
 
-## NGINX
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> NGINX
 
 ### What is nginx
 is a high-performance, open-source web server, reverse proxy, load balancer, and HTTP cache. Known for its efficiency in handling thousands of concurrent connections with low memory usage, it is commonly used to serve static content, speed up dynamic websites, and distribute traffic across servers.
