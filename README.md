@@ -8,6 +8,48 @@ The whole project has to be done in a virtual machine.
 
 This repository focuses on Docker, Docker Compose, containers, networking, volumes, and service separation (NGINX, WordPress + PHP-FPM, MariaDB).
 
+
+## Table of contents
+- [Description](#description)
+- [Project description (Docker & sources)](#project-description-docker--sources)
+  - [Infrastructure overview](#infrastructure-overview)
+  - [Main design choices](#main-design-choices)
+  - [Sources included in this project](#sources-included-in-this-project)
+- [Instructions](#instructions)
+  - [Prerequisites](#prerequisites)
+  - [Run](#run)
+- [Required comparisons](#required-comparisons)
+  - [Virtual Machines vs Docker](#virtual-machines-vs-docker)
+  - [Secrets vs Environment Variables](#secrets-vs-environment-variables)
+  - [Docker Network vs Host Network](#docker-network-vs-host-network)
+  - [Docker Volumes vs Bind Mounts](#docker-volumes-vs-bind-mounts)
+- [Concepts & notes (glossary)](#concepts--notes-glossary)
+  - [Docker](#docker)
+    - [What is a docker?](#what-is-a-docker)
+    - [What is a Docker Image?](#what-is-a-docker-image)
+    - [What is a Dockerfile?](#what-is-a-dockerfile)
+    - [What is Entrypoint ?](#what-is-entrypoint-)
+    - [What is a Docker Network?](#what-is-a-docker-network)
+    - [What is a Docker Compose?](#what-is-a-docker-compose)
+    - [What is the difference between Docker and host?](#what-is-the-difference-between-docker-and-host)
+    - [What is daemon ?](#what-is-daemon-)
+  - [Process model: PID 1](#process-model-pid-1)
+    - [What is PID 1?](#what-is-pid-1)
+  - [WordPress tooling](#wordpress-tooling)
+    - [What is WP-CLI?](#what-is-wp-cli)
+    - [what is .wordprezss php-fpm ?](#what-is-wordprezss-php-fpm-)
+  - [FTP](#ftp)
+    - [What is FTP? And How Does it Work?](#what-is-ftp-and-how-does-it-work)
+  - [NGINX](#nginx)
+    - [What is nginx](#what-is-nginx)
+    - [What is a server?](#what-is-a-server)
+  - [MariaDB and Alpine](#mariadb-and-alpine)
+  - [.CONF ?](#conf-)
+  - [what is docker hub ?](#what-is-docker-hub-)
+- [Resources](#resources)
+  - [References](#references)
+  - [AI usage](#ai-usage)
+
 ---
 
 ## Instructions
@@ -49,6 +91,10 @@ The infrastructure is composed of:
 What is a virtual machine ?  
 A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run programs and deploy apps. One or more virtual “guest” machines run on a physical “host” machine. Each virtual machine runs its own operating system and functions separately from the other VMs, even when they are all running on the same host. This means that, for example, a virtual MacOS virtual machine can run on a physical PC.
 
+
+---
+
+
 **CONTAINER**
 
 What is a Container?  
@@ -83,7 +129,6 @@ Docker containers have their own file system, dependency structure, processes, a
 
 ---
 
-## Concepts & notes (glossary)
 
 ## DOCKER
 
@@ -177,13 +222,18 @@ Docker host is the server (machine) on which Docker daemon runs. Docker containe
 ### What is daemon ?
 Daemon is a computer program that runs as a background process rather than under the direct control of an interactive user. Common on Unix-like systems, daemons handle ongoing, repetitive tasks such as network services (httpd), printing, or system logging.
 
+
 ---
+
+
 ### What is PID 1?
 In a Docker container, the PID 1 process is a special process that plays an important role in the container’s lifecycle. This process is the identifier of the init process, which is the first process that is started when the system boots up, and it is responsible for starting and stoping all of the other processes on the system. And in Docker as well, the init process is responsible for starting and stoping the application that is running in the container.
 PID 1 in a Docker container behaves differently from the init process in a normal Unix-based system. (they are NOT the same!)
 
 ### Is the Daemon Process PID 1? And How Does They Differ From Each Other?
 The daemon process is NOT the PID 1, the daemon process is a background process that runs continuosuly on a system and performs a specific task. In contrast, PID 1 is the first process that the kernel starts in a Unix-based system and plays a special role in the system.
+
+
 ---
 
 ## WordPress tooling
@@ -195,10 +245,12 @@ WP-CLI is the command line interface for WordPress. It is a tool that allows you
 PHP-FPM is a processor for PHP, one of the most common scripting languages, that enables WordPress sites to handle a greater volume of web traffic without relying on as many server resources as when using alternative PHP processors.
 
 ---
+
 ### What is FTP? And How Does it Work?
 FTP or File Transfer Protocol is a protocol that’s used for transferring files between a client and a server over TCP/IP network, such as the internet. It provides a robust mechanism for users to upload, download, and manage files on remote servers.
 
 FTP works by opening two connections that link the 2 hosts (client and server) trying to communicate between each other, one connection is designed for the commands and replies that gets sent between the two clients, and the other connection is handles the transfer of the data.
+
 ---
 
 ## NGINX
@@ -225,6 +277,8 @@ Key Differences and Interactions:
 - Performance & Security: Alpine is designed for security and speed, making it an excellent choice for containerized MariaDB.
 
 ---
+
+
 ### .CONF ?
 Docker Configs are a resource in Docker for storing non-sensitive information such as configuration files, separate from a service's image or running containers within Docker Swarm environments.
 
