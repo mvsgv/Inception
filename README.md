@@ -15,7 +15,7 @@ This repository focuses on Docker, Docker Compose, containers, networking, volum
 ### Prerequisites
 - Docker + Docker Compose installed
 - Run the project inside a Virtual Machine (as required by the subject)
-- A local domain pointing to your local IP: `login.42.fr` (replace `login` with your 42 username)
+- A local domain pointing to your local IP: `mavissar.42.fr` 
 
 ### Run
 Use the Makefile at the repository root.
@@ -69,7 +69,6 @@ Using a Docker network provides container isolation and controlled communication
 Host networking is forbidden by the subject and also reduces isolation (containers share the host network stack).
 
 ### Docker Volumes vs Bind Mounts
-**Bind mounts ?**  
 When you use a bind mount, a file or directory on the host machine is mounted from the host into a container. By contrast, when you use a volume, a new directory is created within Docker's storage directory on the host machine, and Docker manages that directory's contents.
 
 Volumes are persistent data stores for containers, created and managed by Docker. You can create a volume explicitly using the docker volume create command, or Docker can create a volume during container or service creation. When you create a volume, it's stored within a directory on the Docker host.
@@ -96,11 +95,13 @@ Docker Image is built from a DOCKERFILE, which is a simple text file that contai
 ### What is a Dockerfile?
 Dockerfile is that SIMPLE TEXT FILE, which contains a set of instructions for building a Docker Image. It specifies the base image to use and then includes a series of commands that automate the process for configuring and building the image, such as installing packages, copying files, and setting environment variables. Each command in the Dockerfile creates a new layer in the image.
 
-FROM  - defines a base for your image. exemple : FROM debian  
-RUN - executes any commands in a new layer on top of the current image and commits the result. RUN also has a shell form for running commands.  
-WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow it in the Dockerfile. (You go directly in the directory you choose)  
-COPY - copies new files or directories from and adds them to the filesystem of the container at the path .  
-CMD - lets you define the default program that is run once you start the container based on this image. Each Dockerfile only has one CMD, and only the last CMD instance is respected when multiple ones exist.
+```yaml
+  FROM  - defines a base for your image. exemple : FROM debian  
+  RUN - executes any commands in a new layer on top of the current image and commits the result. RUN also has a shell form for running commands.  
+  WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow it in the Dockerfile. (You go directly in the directory you choose)  
+  COPY - copies new files or directories from and adds them to the filesystem of the container at the path .  
+  CMD - lets you define the default program that is run once you start the container based on this image. Each Dockerfile only has one CMD, and only the last CMD instance is respected       when multiple ones exist.
+```
 
 ### What is Entrypoint ?
 The ENTRYPOINT Dockerfile instruction sets the process executed when your container starts. It allows you to define the default behavior of a container by setting a specific application or script to be executed.
