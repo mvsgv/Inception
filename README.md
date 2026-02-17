@@ -45,7 +45,6 @@ The infrastructure is composed of:
 ## Required comparisons
 
 ### Virtual Machines vs Docker
-**VM**
 
 What is a virtual machine ?  
 A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run programs and deploy apps. One or more virtual “guest” machines run on a physical “host” machine. Each virtual machine runs its own operating system and functions separately from the other VMs, even when they are all running on the same host. This means that, for example, a virtual MacOS virtual machine can run on a physical PC.
@@ -126,9 +125,10 @@ Overall, Docker Compose streamlines the development process, making it easier fo
 
 A Docker Compose has 3 important parts, which are:
 
-Services: A service is a unit of work in Docker Compose, it has a name, and it defines a container images, a set of environment variables, and a set of ports that are exposed to the host machine. When you run docker-compose up, Docker will create a new container for each service in your Compose file.  
-Networks: A network is a way for containers to communicate with each other. When you create a network in your Compose file, Docker will create a new network that all the other containers in your Compose file will be connected to. This allows containers to communicate with each other without even knowing the IP of each other, just by the name.  
-Volumes: A volume is a way to store data that is shared between containers. When you create a volume in your Compose file, Docker will create a new volume (a folder in another way) that all the containers have access to. This allows you to share data between the containers without having to copy-paste each and every time you want that data.
+  - Services: A service is a unit of work in Docker Compose, it has a name, and it defines a container images, a set of environment variables,
+    and a set of ports that are exposed to the host machine. When you run docker-compose up, Docker will create a new container for each service in your Compose file.  
+  - Networks: A network is a way for containers to communicate with each other. When you create a network in your Compose file, Docker will create a new network that all the other       containers in your Compose file will be connected to. This allows containers to communicate with each other without even knowing the IP of each other, just by the name.  
+  - Volumes: A volume is a way to store data that is shared between containers. When you create a volume in your Compose file, Docker will create a new volume (a folder in another        way) that all the containers have access to. This allows you to share data between the containers without having to copy-paste each and every time you want that data.
 
 Example snippet:
 ```yaml
