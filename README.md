@@ -18,10 +18,6 @@ This repository focuses on Docker, Docker Compose, containers, networking, volum
   - [Prerequisites](#prerequisites)
   - [Run](#run)
 - [Required comparisons](#required-comparisons)
-  - [Virtual Machines vs Docker](#virtual-machines-vs-docker)
-  - [Secrets vs Environment Variables](#secrets-vs-environment-variables)
-  - [Docker Network vs Host Network](#docker-network-vs-host-network)
-  - [Docker Volumes vs Bind Mounts](#docker-volumes-vs-bind-mounts)
 - [Docker](#docker)
     - [What is a docker?](#what-is-a-docker)
     - [What is a Docker Image?](#what-is-a-docker-image)
@@ -38,6 +34,8 @@ This repository focuses on Docker, Docker Compose, containers, networking, volum
     - [what is .wordprezss php-fpm ?](#what-is-wordprezss-php-fpm-)
   - [FTP](#ftp)
     - [What is FTP? And How Does it Work?](#what-is-ftp-and-how-does-it-work)
+  - [MARIADB](#mariadb)
+    - [What is mariadb](#what-is-mariadb)
   - [NGINX](#nginx)
     - [What is nginx](#what-is-nginx)
     - [What is a server?](#what-is-a-server)
@@ -265,6 +263,10 @@ FTP works by opening two connections that link the 2 hosts (client and server) t
 
 ---
 
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> MariaDb
+
+### What is mariadb
+MariaDB Server is a general purpose open source relational database management system. It’s one of the most popular database servers in the world, with notable users including Wikipedia, WordPress.com and Google. 
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> NGINX
 
@@ -287,16 +289,8 @@ SSL (Secure Sockets Layer) is a security protocol that encrypts data transmitted
 
 ---
 
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> MariaDB and Alpine
-MariaDB is an open-source relational database management system, while Alpine Linux is a lightweight, security-focused Linux distribution. MariaDB on Alpine (often used together in Docker) provides a, fast, and minimal-footprint database container, using musl libc and busybox instead of standard GNU/Linux tools.
-
-Key Differences and Interactions:
-- Definition: MariaDB is the software (database engine), while Alpine is the underlying operating system.
-- Size: Alpine-based MariaDB containers are significantly smaller than the official MariaDB images based on Red Hat (UBI9) or Debian.
-- Library: Alpine uses musl libc, which can sometimes lead to different behavior compared to glibc used in other distributions.
-- Package Management: Alpine uses apk to install packages (apk add mariadb), whereas others use apt or dnf.
-- Usage: You typically run a MariaDB container on an Alpine Linux base image to create a "tiny" database server.
-- Performance & Security: Alpine is designed for security and speed, making it an excellent choice for containerized MariaDB.
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Debian and Alpine
+Alpine Linux and Debian are examples of community-developed distros. The main difference between these two is that Alpine is a small, minimalistic distro ideal for starting projects, whereas Debian comes with extensive functionality and packages, making it suitable for development, testing, and production environments.
 
 ---
 
