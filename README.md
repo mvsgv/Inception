@@ -11,10 +11,6 @@ This repository focuses on Docker, Docker Compose, containers, networking, volum
 
 ## Table of contents
 - [Description](#description)
-- [Project description (Docker & sources)](#project-description-docker--sources)
-  - [Infrastructure overview](#infrastructure-overview)
-  - [Main design choices](#main-design-choices)
-  - [Sources included in this project](#sources-included-in-this-project)
 - [Instructions](#instructions)
   - [Prerequisites](#prerequisites)
   - [Run](#run)
