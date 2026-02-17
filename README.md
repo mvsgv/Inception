@@ -1,5 +1,7 @@
 *This project has been created as part of the 42 curriculum by mavissar.*
 
+<img alt="pink kaomoji" src="https://img.shields.io/badge/%E3%81%A5%EF%BD%A1%E2%97%95%E2%80%BF%E2%80%BF%E2%97%95%EF%BD%A1)%E3%81%A5-ff69b4?style=flat" />
+
 # Inception
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Description
