@@ -303,4 +303,3 @@ AI was used to:
 - Reorganize this README for clarity and compliance with the subject requirements.
 - Suggest documentation structure and check for missing mandatory sections.
 
-AI was not used to copy/paste third-party copyrighted code; all implementation decisions and final code are authored and reviewed by the student.
