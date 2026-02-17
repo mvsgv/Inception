@@ -73,6 +73,12 @@ When you use a bind mount, a file or directory on the host machine is mounted fr
 
 Volumes are persistent data stores for containers, created and managed by Docker. You can create a volume explicitly using the docker volume create command, or Docker can create a volume during container or service creation. When you create a volume, it's stored within a directory on the Docker host.
 
+![vvvvm](https://github.com/user-attachments/assets/79d62829-17ca-47e0-acd8-fe41d44e9a5f)
+
+A VM lets you run a virtual machine on any hardware. Docker lets you run an application on any operating system. 
+It uses isolated user-space instances known as containers. 
+Docker containers have their own file system, dependency structure, processes, and network capabilities.
+
 ---
 
 ## Concepts & notes (glossary)
