@@ -271,6 +271,8 @@ FTP works by opening two connections that link the 2 hosts (client and server) t
 ### What is nginx
 is a high-performance, open-source web server, reverse proxy, load balancer, and HTTP cache. Known for its efficiency in handling thousands of concurrent connections with low memory usage, it is commonly used to serve static content, speed up dynamic websites, and distribute traffic across servers.
 
+<img width="3328" height="3900" alt="nginx" src="https://github.com/user-attachments/assets/c23e01b3-c117-4ef7-8771-21b943711ab9" />
+
 Nginx TLSv1.2 and TLSv1.3 are protocols securing HTTPS traffic by negotiating encryption between a client and server. TLSv1.3 is faster, using one-round-trip handshakes and modern, secure ciphers. TLSv1.2 is the widely supported, legacy standard. Enabling both (ssl_protocols TLSv1.2 TLSv1.3;) ensures maximum compatibility with modern security.
 
 ### What is a server?
