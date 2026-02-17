@@ -276,7 +276,14 @@ is a high-performance, open-source web server, reverse proxy, load balancer, and
 Nginx TLSv1.2 and TLSv1.3 are protocols securing HTTPS traffic by negotiating encryption between a client and server. TLSv1.3 is faster, using one-round-trip handshakes and modern, secure ciphers. TLSv1.2 is the widely supported, legacy standard. Enabling both (ssl_protocols TLSv1.2 TLSv1.3;) ensures maximum compatibility with modern security.
 
 ### What is a server?
-A server is a powerful computer or software system on a network that manages, stores, and sends data, files, or applications to other devices, known as clients. Using a client-server model, it fulfills requests—such as loading a website or retrieving email—from multiple users simultaneously, acting as the backbone of digital networking.
+A server is a powerful computer or software system on a network that manages, stores, and sends data, files, or applications to other devices, known as clients. Using a client-server model, it fulfills requests such as loading a website or retrieving email from multiple users simultaneously, acting as the backbone of digital networking.
+
+---
+
+
+A TLS session operates over a TCP connection. TLS is responsible for the encryption and the authentication of the SDUs exchanged by the application layer protocol while TCP provides the reliable delivery of this encrypted and authenticated bytestream. TLS is used by many different application layer protocols.
+
+SSL (Secure Sockets Layer) is a security protocol that encrypts data transmitted between a web server and a browser, ensuring privacy, data integrity, and authentication. It transforms data into unreadable code to prevent theft, indicated by "HTTPS" and a padlock icon in the browser. 
 
 ---
 
