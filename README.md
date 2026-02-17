@@ -178,17 +178,12 @@ Docker host is the server (machine) on which Docker daemon runs. Docker containe
 Daemon is a computer program that runs as a background process rather than under the direct control of an interactive user. Common on Unix-like systems, daemons handle ongoing, repetitive tasks such as network services (httpd), printing, or system logging.
 
 ---
-
-## PID 1
-
 ### What is PID 1?
 In a Docker container, the PID 1 process is a special process that plays an important role in the container’s lifecycle. This process is the identifier of the init process, which is the first process that is started when the system boots up, and it is responsible for starting and stoping all of the other processes on the system. And in Docker as well, the init process is responsible for starting and stoping the application that is running in the container.
-
 PID 1 in a Docker container behaves differently from the init process in a normal Unix-based system. (they are NOT the same!)
 
 ### Is the Daemon Process PID 1? And How Does They Differ From Each Other?
 The daemon process is NOT the PID 1, the daemon process is a background process that runs continuosuly on a system and performs a specific task. In contrast, PID 1 is the first process that the kernel starts in a Unix-based system and plays a special role in the system.
-
 ---
 
 ## WordPress tooling
@@ -200,14 +195,10 @@ WP-CLI is the command line interface for WordPress. It is a tool that allows you
 PHP-FPM is a processor for PHP, one of the most common scripting languages, that enables WordPress sites to handle a greater volume of web traffic without relying on as many server resources as when using alternative PHP processors.
 
 ---
-
-## FTP
-
 ### What is FTP? And How Does it Work?
 FTP or File Transfer Protocol is a protocol that’s used for transferring files between a client and a server over TCP/IP network, such as the internet. It provides a robust mechanism for users to upload, download, and manage files on remote servers.
 
 FTP works by opening two connections that link the 2 hosts (client and server) trying to communicate between each other, one connection is designed for the commands and replies that gets sent between the two clients, and the other connection is handles the transfer of the data.
-
 ---
 
 ## NGINX
@@ -223,8 +214,6 @@ A server is a powerful computer or software system on a network that manages, st
 ---
 
 ## MariaDB and Alpine
-
-### MARIADB AND ALPINE
 MariaDB is an open-source relational database management system, while Alpine Linux is a lightweight, security-focused Linux distribution. MariaDB on Alpine (often used together in Docker) provides a, fast, and minimal-footprint database container, using musl libc and busybox instead of standard GNU/Linux tools.
 
 Key Differences and Interactions:
@@ -236,9 +225,6 @@ Key Differences and Interactions:
 - Performance & Security: Alpine is designed for security and speed, making it an excellent choice for containerized MariaDB.
 
 ---
-
-## Misc
-
 ### .CONF ?
 Docker Configs are a resource in Docker for storing non-sensitive information such as configuration files, separate from a service's image or running containers within Docker Swarm environments.
 
