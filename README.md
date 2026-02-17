@@ -2,11 +2,12 @@
 
 # Inception
 
-## Description
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Description
 This project consists of setting up a small infrastructure composed of different services under specific rules.  
 The whole project has to be done in a virtual machine.
 
 This repository focuses on Docker, Docker Compose, containers, networking, volumes, and service separation (NGINX, WordPress + PHP-FPM, MariaDB).
+
 
 
 ## Table of contents
@@ -143,7 +144,7 @@ Docker Image is built from a DOCKERFILE, which is a simple text file that contai
 ### What is a Dockerfile?
 Dockerfile is that SIMPLE TEXT FILE, which contains a set of instructions for building a Docker Image. It specifies the base image to use and then includes a series of commands that automate the process for configuring and building the image, such as installing packages, copying files, and setting environment variables. Each command in the Dockerfile creates a new layer in the image.
 
-```yaml
+```
   FROM  - defines a base for your image. exemple : FROM debian  
   RUN - executes any commands in a new layer on top of the current image and commits the result. RUN also has a shell form for running commands.  
   WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow it in the Dockerfile. (You go directly in the directory you choose)  
