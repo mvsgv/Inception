@@ -126,7 +126,7 @@ Docker containers have their own file system, dependency structure, processes, a
 ---
 
 
-## ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Docker
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Docker
 
 ### What is a docker?
 Docker is an operating system for containers. Similar to how a virtual machine virtualizes (removes the need to directly manage) server hardware, containers virtualize the operating system of a server. Docker is installed on each server and provides simple commands you can use to build, start, or stop containers.  
@@ -261,7 +261,7 @@ A server is a powerful computer or software system on a network that manages, st
 
 ---
 
-## MariaDB and Alpine
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> MariaDB and Alpine
 MariaDB is an open-source relational database management system, while Alpine Linux is a lightweight, security-focused Linux distribution. MariaDB on Alpine (often used together in Docker) provides a, fast, and minimal-footprint database container, using musl libc and busybox instead of standard GNU/Linux tools.
 
 Key Differences and Interactions:
