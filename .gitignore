@@ -1,0 +1,13 @@
+# Ignore le fichier .env réel contenant les mots de passe
+srcs/.env
+
+# Ignore les certificats SSL générés (puisqu'ils sont créés par le Dockerfile ou sur l'hôte)
+srcs/requirements/nginx/tools/*.crt
+srcs/requirements/nginx/tools/*.key
+
+# Ignore les données persistantes (si tu les as mises dans ton dossier projet par erreur)
+**/data/
+
+# Fichiers système inutiles
+.DS_Store
+*.swp
