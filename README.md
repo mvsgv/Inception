@@ -73,14 +73,6 @@ Virtual Machines (VMs) and Docker containers differ primarily in architecture: V
 - **WordPress + PHP-FPM:** [https://www.php.net/manual/en/install.fpm.php](https://www.php.net/manual/en/install.fpm.php)
 - **MariaDB Knowledge Base:** [https://mariadb.com/kb/en/documentation/](https://mariadb.com/kb/en/documentation/)
 
-### AI Usage
-AI assistants (such as GitHub Copilot and ChatGPT) were used to:
-- Clarify concepts regarding Docker networking and TLS configuration.
-- Debug configuration errors in `nginx.conf` and `docker-compose.yml`.
-- Reorganize and format this README to ensure compliance with the 42 subject requirements.
-- Verify shell script logic for the MariaDB setup.
-
----
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Additional Concepts (Glossary)
 
