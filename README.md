@@ -5,317 +5,90 @@
 # Inception
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Description
-This project consists of setting up a small infrastructure composed of different services under specific rules.  
-The whole project has to be done in a virtual machine.
+This project consists of setting up a small infrastructure composed of different services under specific rules. The whole project has to be done in a virtual machine.
 
-This repository focuses on Docker, Docker Compose, containers, networking, volumes, and service separation (NGINX, WordPress + PHP-FPM, MariaDB).
-
-
-
-## Table of contents
-- [Description](#description)
-- [Instructions](#instructions)
-  - [Prerequisites](#prerequisites)
-  - [Run](#run)
-- [Required comparisons](#required-comparisons)
-- [Docker](#docker)
-    - [What is a docker?](#what-is-a-docker)
-    - [What is a Docker Image?](#what-is-a-docker-image)
-    - [What is a Dockerfile?](#what-is-a-dockerfile)
-    - [What is Entrypoint ?](#what-is-entrypoint-)
-    - [What is a Docker Network?](#what-is-a-docker-network)
-    - [What is a Docker Compose?](#what-is-a-docker-compose)
-    - [What is the difference between Docker and host?](#what-is-the-difference-between-docker-and-host)
-    - [What is daemon ?](#what-is-daemon-)
-  - [Process model: PID 1](#process-model-pid-1)
-    - [What is PID 1?](#what-is-pid-1)
-  - [WordPress tooling](#wordpress-tooling)
-    - [What is WP-CLI?](#what-is-wp-cli)
-    - [what is .wordprezss php-fpm ?](#what-is-wordprezss-php-fpm-)
-  - [FTP](#ftp)
-    - [What is FTP? And How Does it Work?](#what-is-ftp-and-how-does-it-work)
-  - [MARIADB](#mariadb)
-    - [What is mariadb](#what-is-mariadb)
-  - [NGINX](#nginx)
-    - [What is nginx](#what-is-nginx)
-    - [What is a server?](#what-is-a-server)
-  - [MariaDB and Alpine](#mariadb-and-alpine)
-  - [.CONF ?](#conf-)
-  - [what is docker hub ?](#what-is-docker-hub-)
-- [Resources](#resources)
-  - [References](#references)
-  - [AI usage](#ai-usage)
-
----
+This repository focuses on **Docker**, **Docker Compose**, containers, networking, volumes, and service separation. The goal is to deepen understanding of system administration by building a Docker infrastructure from scratch, using specific operating systems (Debian/Alpine) and configuring services manually without pre-made images.
 
 ## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Instructions
 
 ### Prerequisites
-- Docker + Docker Compose installed
-- Run the project inside a Virtual Machine (as required by the subject)
-- A local domain pointing to your local IP: `mavissar.42.fr` 
+- Docker + Docker Compose installed.
+- Run the project inside a Virtual Machine (as required by the subject).
+- A local domain pointing to your local IP in `/etc/hosts`: `127.0.0.1 mavissar.42.fr`
 
-### Run
-Use the Makefile at the repository root.
+### Execution
+Use the **Makefile** at the repository root to manage the lifecycle of the application.
 
-Examples (adjust to your Makefile targets if different):
-- Build & start: `make`
-- Start: `make up`
-- Stop: `make down`
-- Rebuild: `make re`
-- Clean: `make clean`
+- **Build & start:** `make`
+- **Start (background):** `make up`
+- **Stop:** `make down`
+- **Rebuild:** `make re`
+- **Clean data & containers:** `make fclean`
 
-Environment variables must be stored in a `.env` file. No passwords should be committed in the repository (prefer Docker secrets for sensitive values).
-
----
-
-## Project description (Docker & sources)
-The infrastructure is composed of:
-- NGINX (TLSv1.2 or TLSv1.3 only) as the single entrypoint on port 443
-- WordPress + PHP-FPM only (no nginx inside)
-- MariaDB only (no nginx inside)
-- Named volumes for database + website files (no bind mounts for these)
-- A dedicated Docker network for container-to-container communication
-- Restart policies to recover from crashes
+Environment variables must be stored in a `.env` file in `srcs/`. **Note:** No passwords should be committed in the repository.
 
 ---
 
-## Required comparisons
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Project Description & Design Choices
 
-### Virtual Machines vs Docker
-Virtual Machines (VMs) and Docker containers differ primarily in architecture: VMs virtualize hardware, running a full guest OS, whereas Docker containers virtualize the operating system, sharing the host kernel. Docker is faster, lightweight, and ideal for microservices and CI/CD, while VMs offer superior, total isolation for complex, diverse OS applications. 
+The infrastructure follows a strict micro-services architecture:
+- **NGINX:** The only entrypoint, listening on port 443 (TLSv1.2/1.3). It handles HTTPS traffic and forwards PHP requests to WordPress.
+- **WordPress:** Runs solely with PHP-FPM (no internal Nginx). It processes dynamic content and communicates with MariaDB.
+- **MariaDB:** Stored in a secured application network, accessible only by WordPress, not directly from the host.
+
+**Design Choices:**
+- **Debian Bookworm** was chosen as the base image for stability and ease of package management (`apt`).
+- **Docker Network:** A user-defined bridge network isolates the containers from the external world, ensuring only necessary ports are exposed.
+- **Volumes:** Named volumes are used for persistence to ensure database and website data survive container restarts.
+
+### Comparisons
+
+#### 1. Virtual Machines vs Docker
+Virtual Machines (VMs) and Docker containers differ primarily in architecture: VMs virtualize hardware, running a full guest OS, whereas Docker containers virtualize the operating system, sharing the host kernel.
+- **Docker:** Faster startup, lightweight, less resource-intensive. Ideal for microservices.
+- **VMs:** slower, heavier, but offer total isolation (own kernel).
 
 ![vvvvm](https://github.com/user-attachments/assets/79d62829-17ca-47e0-acd8-fe41d44e9a5f)
 
-### Secrets vs Environment Variables
-Secrets and environment variables differ primarily in security and purpose: environment variables are generally used for non-sensitive configuration (e.g., app mode, feature flags), while secrets are encrypted, restricted, and managed to store sensitive credentials like API keys or passwords. Secrets provide better security by preventing exposure in logs, codebases, or process inspections.
+#### 2. Secrets vs Environment Variables
+- **Environment Variables:** Useful for non-sensitive configuration (e.g., domain name, debug mode). The values are visible in `docker inspect`.
+- **Secrets:** Encrypted and managed specifically for sensitive data (API keys, passwords). They are mounted as files inside the container (`/run/secrets/`), preventing exposure in environment logs.
 
-### Docker Network vs Host Network
-Using a Docker network provides container isolation and controlled communication.  
-Host networking is forbidden by the subject and also reduces isolation (containers share the host network stack).
+#### 3. Docker Network vs Host Network
+- **Docker Network (Bridge):** Provides isolation. Containers get their own IP addresses and DNS resolution within the Docker daemon. Ports must be explicitly published to be accessible from the host.
+- **Host Network:** The container shares the host's networking namespace. It uses the host's IP and ports directly. Forbidden in this subject because it breaks isolation.
 
-### Docker Volumes vs Bind Mounts
-When you use a bind mount, a file or directory on the host machine is mounted from the host into a container. By contrast, when you use a volume, a new directory is created within Docker's storage directory on the host machine, and Docker manages that directory's contents.
-
-Volumes are persistent data stores for containers, created and managed by Docker. You can create a volume explicitly using the docker volume create command, or Docker can create a volume during container or service creation. When you create a volume, it's stored within a directory on the Docker host.
-
-- With Bind Mount, a file or directory on the host machine is mounted into a container. The file or directory is referenced by its full or relative path on the host machine.
-- With Volume, a new directory is created within Docker's storage directory on the host machine, and Docker manages that directory's content.
-
+#### 4. Docker Volumes vs Bind Mounts
+- **Bind Mounts:** A specific file or directory on the host machine is mounted into the container. Dependent on the host's file system structure.
+- **Docker Volumes:** Managed completely by Docker (stored in `/var/lib/docker/volumes/`). They are safer, portable, and easier to back up. In this project, named volumes are required to decouple storage from the host's specific path structure.
 
 ---
 
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Container/VM
-
-What is a Container?  
-A Container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.
-
-What is a virtual machine ?  
-A Virtual Machine (VM) is a compute resource that uses software instead of a physical computer to run programs and deploy apps. One or more virtual “guest” machines run on a physical “host” machine. Each virtual machine runs its own operating system and functions separately from the other VMs, even when they are all running on the same host. This means that, for example, a virtual MacOS virtual machine can run on a physical PC.
-
-What is The Difference Between Container and VM?  
-Containers and Virtual machines have similar resource isolation and allocation benefits but function differently because containers virtualize the operating system instead of the hardware. Containers are more portable and efficient.
-
-
----
-
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Docker
-
-### What is a docker?
-Docker is an operating system for containers. Similar to how a virtual machine virtualizes (removes the need to directly manage) server hardware, containers virtualize the operating system of a server. Docker is installed on each server and provides simple commands you can use to build, start, or stop containers.  
-Docker is a tool designed to allow you to build, deploy and run applications in an isolated and consistent manner across different machines and operating systems. This process is done using CONTAINERS. which are lightweight virtualized environments that package all the dependencies and code an application needs to run into a single text file, which can run the same way on any machine.
-
-While Docker is primarily used to package and run applications in containers, it is not limited to that use case. Docker can also be used to create and run other types of containers, such as ones for testing, development, or experimentation.
-
-### What is a Docker Image?
-Docker Image is a lightweight executable package that includes everything the application needs to run, including the code, runtime environment, system tools, libraries, and dependencies.
-
-Although it cannot guarantee error-free performance, as the behavior of an application ultimately depends on many factors beyond the image itself, using Docker can reduce the likelihood of unexpected errors.
-
-Docker Image is built from a DOCKERFILE, which is a simple text file that contains a set of instructions for building the image, with each instruction creating a new layer in the image.
-
-### What is a Dockerfile?
-Dockerfile is that SIMPLE TEXT FILE, which contains a set of instructions for building a Docker Image. It specifies the base image to use and then includes a series of commands that automate the process for configuring and building the image, such as installing packages, copying files, and setting environment variables. Each command in the Dockerfile creates a new layer in the image.
-
-```
-  FROM - defines a base for your image. exemple : FROM debian  
-
-  RUN  - executes any commands in a new layer on top of the current image 
-          and commits the result. 
-
-          RUN also has a shell form for running commands.  
-  WORKDIR - sets the working directory for any RUN, CMD, ENTRYPOINT,
-            COPY, and ADD instructions that follow it in the Dockerfile. 
-            (You go directly in the directory you choose)  
-
-  COPY -  copies new files or directories from and adds them to 
-           the filesystem of the container at the path .  
-
-  CMD - lets you define the default program that is run once you start 
-        the container based on this image. Each Dockerfile only has one CMD,
-         and only the last CMD instance is respected when multiple ones exist.
-```
-
-### What is Entrypoint ?
-The ENTRYPOINT Dockerfile instruction sets the process executed when your container starts. It allows you to define the default behavior of a container by setting a specific application or script to be executed.
-
-### What is a docker network?
-A Docker network is a virtual networking system that enables Docker containers to communicate with each other, the host machine, and external networks. Using drivers, it creates isolated, secure, and configurable communication paths, allowing applications in containers to connect while maintaining isolation from other network traffic.  
-Purpose: Enables container-to-container communication, connects containers to the host machine, and manages external connectivity.
-
-### What is a Docker Compose?
-Docker Compose is a powerful tool that simplifies the deployment and management of multi-container Docker applications. It provides several benefits, including simplifying the process of defining related services, volumes for data persistence, and networks for connecting containers. With Docker Compose, you can easily configure each service’s settings, including the image to use, the ports to expose, and the environment variables to set…
-
-Overall, Docker Compose streamlines the development process, making it easier for you to build and deliver your applications with greater efficiency and ease.
-
-A Docker Compose has 3 important parts, which are:
-
-  - Services: 
-    A service is a unit of work in Docker Compose, it has a name, and it  
-    defines a container images, a set of environment variables,
-    and a set of ports that are exposed to the host machine. When you run docker-compose up, Docker will create a new container for each service in your Compose file.  
-  - Networks:
-     A network is a way for containers to communicate with each other. When you create a network in your Compose file, Docker will create a new network that all the other       containers in your Compose file will be connected to. This allows containers to communicate with each other without even knowing the IP of each other, just by the name.  
-  - Volumes: 
-    A volume is a way to store data that is shared between containers. When you create a volume in your Compose file, Docker will create a new volume (a folder in another        way) that all the containers have access to. This allows you to share data between the containers without having to copy-paste each and every time you want that data.
-
-Example snippet:
-```yaml
-version: '3'
-
-# All the services that you will work with should be declared under
-# the SERVICES section!
-services:
-
-  # Name of the first service (for example: nginx)
-  nginx:
-  
-    # The hostname of the service (will be the same as the service name!)
-    hostname: nginx
-    
-    # Where the service exist (path) so you can build it
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
-      
-    # Restart to always keep the service restarting in case of
-    # any unexpected errors causing it to go down
-    restart: always
-    
-    # This line explains itself!!!
-    depends_on:
-      - wordpress
-      
-    # The ports that will be exposed and you will work with
-    ports:
-      - 443:443
-      
-    # The volumes that will be mounted when the container gets built
-    volumes:
-      - wordpress:/var/www/html
-      
-    # The networks that the container will connect and communicate
-    # with the other containers
-    networks:
-      - web
-```
-
-### What is the difference between Docker and host?
-Docker host is the server (machine) on which Docker daemon runs. Docker containers are running instances of Docker images. Docker uses a client-server architecture. The Docker client talks to the Docker daemon, which does the heavy lifting of building, running, and distributing your Docker container
-
-### What is daemon ?
-Daemon is a computer program that runs as a background process rather than under the direct control of an interactive user. Common on Unix-like systems, daemons handle ongoing, repetitive tasks such as network services (httpd), printing, or system logging.
-
-
----
-
-
-### What is PID 1?
-In a Docker container, the PID 1 process is a special process that plays an important role in the container’s lifecycle. This process is the identifier of the init process, which is the first process that is started when the system boots up, and it is responsible for starting and stoping all of the other processes on the system. And in Docker as well, the init process is responsible for starting and stoping the application that is running in the container.
-PID 1 in a Docker container behaves differently from the init process in a normal Unix-based system. (they are NOT the same!)
-
-### Is the Daemon Process PID 1? And How Does They Differ From Each Other?
-The daemon process is NOT the PID 1, the daemon process is a background process that runs continuosuly on a system and performs a specific task. In contrast, PID 1 is the first process that the kernel starts in a Unix-based system and plays a special role in the system.
-
-
----
-
-
-## WordPress tooling
-
-### What is WP-CLI?
-WP-CLI is the command line interface for WordPress. It is a tool that allows you to interact with your WordPress site from the command line, it is used for a lot of purposes, such as automating tasks, debugging problems, installing/removing plugins along side with themes, managing users and roles, exporting/importing data, run databses queries, and so much more…
-
-### what is .wordprezss php-fpm ?
-PHP-FPM is a processor for PHP, one of the most common scripting languages, that enables WordPress sites to handle a greater volume of web traffic without relying on as many server resources as when using alternative PHP processors.
-
-
----
-
-
-### What is FTP? And How Does it Work?
-FTP or File Transfer Protocol is a protocol that’s used for transferring files between a client and a server over TCP/IP network, such as the internet. It provides a robust mechanism for users to upload, download, and manage files on remote servers.
-
-FTP works by opening two connections that link the 2 hosts (client and server) trying to communicate between each other, one connection is designed for the commands and replies that gets sent between the two clients, and the other connection is handles the transfer of the data.
-
-
----
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> MariaDb
-
-### What is mariadb
-MariaDB Server is a general purpose open source relational database management system. It’s one of the most popular database servers in the world, with notable users including Wikipedia, WordPress.com and Google. 
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> NGINX
-
-### What is nginx
-is a high-performance, open-source web server, reverse proxy, load balancer, and HTTP cache. Known for its efficiency in handling thousands of concurrent connections with low memory usage, it is commonly used to serve static content, speed up dynamic websites, and distribute traffic across servers.
-
-<img width="3328" height="3900" alt="nginx" src="https://github.com/user-attachments/assets/c23e01b3-c117-4ef7-8771-21b943711ab9" />
-
-Nginx TLSv1.2 and TLSv1.3 are protocols securing HTTPS traffic by negotiating encryption between a client and server. TLSv1.3 is faster, using one-round-trip handshakes and modern, secure ciphers. TLSv1.2 is the widely supported, legacy standard. Enabling both (ssl_protocols TLSv1.2 TLSv1.3;) ensures maximum compatibility with modern security.
-
-### What is a server?
-A server is a powerful computer or software system on a network that manages, stores, and sends data, files, or applications to other devices, known as clients. Using a client-server model, it fulfills requests such as loading a website or retrieving email from multiple users simultaneously, acting as the backbone of digital networking.
-
----
-
-
-A TLS session operates over a TCP connection. TLS is responsible for the encryption and the authentication of the SDUs exchanged by the application layer protocol while TCP provides the reliable delivery of this encrypted and authenticated bytestream. TLS is used by many different application layer protocols.
-
-SSL (Secure Sockets Layer) is a security protocol that encrypts data transmitted between a web server and a browser, ensuring privacy, data integrity, and authentication. It transforms data into unreadable code to prevent theft, indicated by "HTTPS" and a padlock icon in the browser. 
-
----
-
-## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Debian and Alpine
-Alpine Linux and Debian are examples of community-developed distros. The main difference between these two is that Alpine is a small, minimalistic distro ideal for starting projects, whereas Debian comes with extensive functionality and packages, making it suitable for development, testing, and production environments.
-
----
-
-
-### .CONF ?
-Docker Configs are a resource in Docker for storing non-sensitive information such as configuration files, separate from a service's image or running containers within Docker Swarm environments.
-
-### what is docker hub ?
-Docker Hub is the world’s largest, cloud-based container registry service provided by Docker for storing, sharing, and managing Docker container images. It serves as a central repository, allowing users to pull pre-built, trusted images (including official images) and push custom images to facilitate containerized application development. Key features include image repositories, automated builds, and integration with CI/CD tools.
-
----
-
-## Resources
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Resources
 
 ### References
-- Docker Docs: https://docs.docker.com/
-- Docker Compose Docs: https://docs.docker.com/compose/
-- Dockerfile reference: https://docs.docker.com/reference/dockerfile/
-- NGINX documentation: https://nginx.org/en/docs/
-- TLS (overview): https://datatracker.ietf.org/doc/html/rfc8446 (TLS 1.3), https://datatracker.ietf.org/doc/html/rfc5246 (TLS 1.2)
-- WordPress + PHP-FPM: https://www.php.net/manual/en/install.fpm.php , https://wordpress.org/documentation/
-- MariaDB documentation: https://mariadb.com/kb/en/documentation/
+- **Docker Docs:** [https://docs.docker.com/](https://docs.docker.com/)
+- **Docker Compose Docs:** [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
+- **NGINX Documentation:** [https://nginx.org/en/docs/](https://nginx.org/en/docs/)
+- **WordPress + PHP-FPM:** [https://www.php.net/manual/en/install.fpm.php](https://www.php.net/manual/en/install.fpm.php)
+- **MariaDB Knowledge Base:** [https://mariadb.com/kb/en/documentation/](https://mariadb.com/kb/en/documentation/)
 
-### AI usage
-AI was used to:
-- Reorganize this README for clarity and compliance with the subject requirements.
-- Suggest documentation structure and check for missing mandatory sections.
+### AI Usage
+AI assistants (such as GitHub Copilot and ChatGPT) were used to:
+- Clarify concepts regarding Docker networking and TLS configuration.
+- Debug configuration errors in `nginx.conf` and `docker-compose.yml`.
+- Reorganize and format this README to ensure compliance with the 42 subject requirements.
+- Verify shell script logic for the MariaDB setup.
 
+---
+
+## <img src="https://placehold.co/12x12/f1c40f/f1c40f.png" alt="yellow" /> Additional Concepts (Glossary)
+
+### Docker Components
+- **Dockerfile:** A text document that contains all the commands a user could call on the command line to assemble an image.
+- **Image:** An executable package that includes everything needed to run an application—the code, a runtime, libraries, environment variables, and config files.
+- **Entrypoint:** The instruction that allows you to configure a container that will run as an executable.
+- **Daemon:** The background process (`dockerd`) that manages Docker objects.
+
+### PID 1
+In a Docker container, **PID 1** is the process that starts the container. If PID 1 dies, the container dies. It requires special handling for signals (like SIGTERM) because Linux kernels treat PID 1 differently than other processes.
